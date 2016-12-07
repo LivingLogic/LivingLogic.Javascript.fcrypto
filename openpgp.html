@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 
-<title>The HTML5 Herald</title>
+<title>CryptoLivingApp</title>
 <meta name="description" content="The HTML5 Herald">
 <meta name="author" content="SitePoint">
 
@@ -17,7 +17,7 @@
 
 <body>
 <script src="openpgp/openpgp.js"></script>
-<h2>demo</h2>
+<h1>Crypto LivingApp</h1>
 
 <div id="pubkey" style="display: none;">
 -----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -83,7 +83,7 @@ zmiudCAeKtijCYYJVv74VN2fymDRLVrWDbUH5p2qAQ==
 <!-- <button class="js-pgp-lock-private-key">Lock Private Key</button> -->
 <button class="js-initialize-bob">Initialize Bob</button> <br/><br/>
 
-<div class="js-pgp-generate-key-container">  
+<div class="js-pgp-generate-key-container">
   <input class="js-pgp-user-name" placeholder="John Appleseed" value="John Appleseed" type="text" />
   <input class="js-pgp-email" placeholder="E-Mail" value="john@example.org" type="text" />
   <input class="js-pgp-password" placeholder="Password" value="ll123" type="password" />
@@ -91,13 +91,14 @@ zmiudCAeKtijCYYJVv74VN2fymDRLVrWDbUH5p2qAQ==
 </div>
 
 <div class="js-pgp-encrypt-content-container" style="display: none;">
+Plaintext <br/>
   <textarea class="js-pgp-plaintext-input"></textarea>
   <select class="js-pgp-recipient">
     <option selected>Alice</option>
     <option>Bob</option>
   </select>
-  <p class="js-pgp-ciphertext"></p>
   <button class="js-pgp-encrypt-content">Encrypt</button>
+  <textarea class="js-pgp-ciphertext"></textarea>
   <hr/>
 </div>
 
@@ -143,7 +144,6 @@ var User = function() {
 
   this.encrypt = function(message, publicKey) {
     publicKey = publicKey || this.key.publicKeyArmored;
-
     return openpgp.encrypt({
       data: message,
       publicKeys: openpgp.key.readArmored(publicKey).keys[0]
@@ -152,7 +152,7 @@ var User = function() {
 
   this.decrypt = function(ciphertext) {
     var msgAsciiArmored = ciphertext;
-
+    console.log(this.key);
     return openpgp.decrypt({
       message: openpgp.message.readArmored(msgAsciiArmored),
       privateKey: this.key.key
@@ -181,10 +181,10 @@ document.querySelector('.js-pgp-generate-key').addEventListener('click', functio
 
 document.querySelector('.js-pgp-encrypt-content').addEventListener('click', function() {
   var plaintext = document.querySelector('.js-pgp-plaintext-input').value;
-  var recipient = document.querySelector('.js-pgp-recipient option:selected')
+  var recipient = document.querySelector('.js-pgp-recipient option:checked').value;
 
   Alice.encrypt(plaintext).then(function(encrypted) {
-    document.querySelector('.js-pgp-ciphertext').innerText = encrypted.data;
+    document.querySelector('.js-pgp-ciphertext').value = encrypted.data;
   });
 });
 
@@ -192,6 +192,7 @@ document.querySelector('.js-pgp-decrypt-content').addEventListener('click', func
   var ciphertext = document.querySelector('.js-pgp-ciphertext-input').value;
 
   Alice.decrypt(ciphertext).then(function(decrypted) {
+    console.log(decrypted);
     document.querySelector('.js-pgp-plaintext').innerText = decrypted.data;
   });
 });
