@@ -1,0 +1,29 @@
+{
+  "name": "LivingLogic.Javascript.crypto",
+  "version": "1.0.0",
+  "license": "MIT",
+  "homepage": "http://livinglogic.de/",
+  "authors": [
+    "Peter Boeker <peter@livinglogic.de>",
+    "Sascha Nuissl <sascha@livinglogic.de>"
+  ],
+  "description": "",
+  "main": [
+    "dist/crypto.js",
+    "dist/crypto.min.js"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "openpgp",
+    "crypto"
+  ],
+  "ignore": [
+    "**/.*",
+    "dist/*_debug.js",
+    "node_modules",
+    "test",
+    "doc"
+  ]
+}
