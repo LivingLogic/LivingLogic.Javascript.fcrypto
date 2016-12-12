@@ -1,5 +1,5 @@
 {
-  "name": "openpgp-form",
+  "name": "jquery-form-crypto",
   "description": "",
   "version": "1.0.0",
   "homepage": "http://livinglogic.de",
@@ -12,14 +12,14 @@
     "type": "git",
     "url": "git://github.com/LivingLogic/LivingLogic.Javascript.crypto.git"
   },
-  "main": "dist/crypto.js",
+  "main": "dist/fcrypto.js",
   "directories": {
     "lib": "src"
   },
   "files": [
     "src/",
-    "dist/crypto.js",
-    "dist/crypto.min.js",
+    "dist/fcrypto.js",
+    "dist/fcrypto.min.js",
     "test/unittests.js",
     "test/general"
   ],

@@ -7,8 +7,8 @@
  *   import crypto from 'crypto.js'
  *   crypto.encryptMessage(keys, text)
  */
-import * as crypto from './crypto';
-export default crypto;
+import * as fcrypto from './fcrypto';
+export default fcrypto;
 
 /**
  * Export each high level api function seperately.
@@ -17,7 +17,7 @@ export default crypto;
  *   import { encryptMessage } from 'crypto.js'
  *   encryptMessage(keys, text)
  */
-export * from './crypto';
+export * from './fcrypto';
 
 /**
  * @see module:util

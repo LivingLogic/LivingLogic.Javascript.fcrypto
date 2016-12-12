@@ -1,6 +1,6 @@
 'use strict';
 
-var crypto = typeof window !== 'undefined' && window.openpgp ? window.openpgp : require('../../dist/crypto');
+var fcrypto = typeof window !== 'undefined' && window.openpgp ? window.openpgp : require('../../dist/fcrypto');
 
 var chai = require('chai'),
   expect = chai.expect;

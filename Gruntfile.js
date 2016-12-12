@@ -13,13 +13,13 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     browserify: {
-      crypto: {
+      fcrypto: {
         files: {
-          'dist/crypto.js': [ './src/index.js' ]
+          'dist/fcrypto.js': [ './src/index.js' ]
         },
         options: {
           browserifyOptions: {
-            standalone: 'crypto'
+            standalone: 'fcrypto'
           },
           transform: [
             ["babelify", {
@@ -29,14 +29,14 @@ module.exports = function(grunt) {
           ]
         }
       },
-      crypto_debug: {
+      fcrypto_debug: {
         files: {
-          'dist/crypto_debug.js': [ './src/index.js' ]
+          'dist/fcrypto_debug.js': [ './src/index.js' ]
         },
         options: {
           browserifyOptions: {
             debug: true,
-            standalone: 'crypto'
+            standalone: 'fcrypto'
           },
           transform: [
             ["babelify", {
@@ -51,36 +51,36 @@ module.exports = function(grunt) {
           'test/lib/unittests-bundle.js': [ './test/unittests.js' ]
         },
         options: {
-          external: [ 'crypto', '../../dist/crypto', '../../../dist/crypto' ]
+          external: [ 'fcrypto', '../../dist/fcrypto', '../../../dist/fcrypto' ]
         }
       }
     },
     replace: {
-      crypto: {
-        src: ['dist/crypto.js'],
-        dest: ['dist/crypto.js'],
+      fcrypto: {
+        src: ['dist/fcrypto.js'],
+        dest: ['dist/fcrypto.js'],
         replacements: [{
-          from: /crypto.js VERSION/g,
-          to: 'crypto.js v<%= pkg.version %>'
+          from: /fcrypto.js VERSION/g,
+          to: 'fcrypto.js v<%= pkg.version %>'
         }]
       },
-      crypto_debug: {
-        src: ['dist/crypto_debug.js'],
-        dest: ['dist/crypto_debug.js'],
+      fcrypto_debug: {
+        src: ['dist/fcrypto_debug.js'],
+        dest: ['dist/fcrypto_debug.js'],
         replacements: [{
-          from: /crypto.js VERSION/g,
-          to: 'crypto.js v<%= pkg.version %>'
+          from: /fcrypto.js VERSION/g,
+          to: 'fcrypto.js v<%= pkg.version %>'
         }]
       }
     },
     uglify: {
-      crypto: {
+      fcrypto: {
         files: {
-          'dist/crypto.min.js' : [ 'dist/crypto.js' ]
+          'dist/fcrypto.min.js' : [ 'dist/fcrypto.js' ]
         }
       },
       options: {
-        banner: '/*! crypto.js v<%= pkg.version %> - ' +
+        banner: '/*! fcrypto.js v<%= pkg.version %> - ' +
           '<%= grunt.template.today("yyyy-mm-dd") %>  */'
       }
     },
@@ -137,10 +137,10 @@ module.exports = function(grunt) {
     watch: {
       src: {
         files: ['src/**/*.js'],
-        tasks: ['browserify:crypto']
+        tasks: ['browserify:fcrypto']
       },
       test: {
-        files: ['test/*.js', 'test/crypto/**/*.js', 'test/general/**/*.js'],
+        files: ['test/*.js', 'test/fcrypto/**/*.js', 'test/general/**/*.js'],
         tasks: ['browserify:unittests']
       }
     },
@@ -186,7 +186,7 @@ module.exports = function(grunt) {
   }
 
   // Build tasks
-  grunt.registerTask('version', ['replace:crypto', 'replace:crypto_debug']);
+  grunt.registerTask('version', ['replace:fcrypto', 'replace:fcrypto_debug']);
   grunt.registerTask('default', ['clean', 'browserify', 'version', 'uglify']);
   grunt.registerTask('documentation', ['jsdoc']);
 
