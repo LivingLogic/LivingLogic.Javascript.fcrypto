@@ -1,5 +1,5 @@
 {
-  "name": "LivingLogic.Javascript.crypto",
+  "name": "openpgp-form",
   "version": "1.0.0",
   "license": "MIT",
   "homepage": "http://livinglogic.de/",
@@ -9,8 +9,7 @@
   ],
   "description": "",
   "main": [
-    "dist/crypto.js",
-    "dist/crypto.min.js"
+    "dist/crypto.js"
   ],
   "moduleType": [
     "node"
