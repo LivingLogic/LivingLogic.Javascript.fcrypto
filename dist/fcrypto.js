@@ -20579,6 +20579,10 @@ AsyncProxy.prototype.delegate = function (method, options) {
 // crypto.js
 // Copyright (C) 2016 LivingLogic AG
 
+/* globals jQuery */
+/* globals util */
+/* globals openpgp */
+
 /**
  * @requires util
  * @requires openpgp
@@ -20592,12 +20596,9 @@ AsyncProxy.prototype.delegate = function (method, options) {
 
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.example = example;
-window.openpgp = require('openpgp'); // Temp -- Tests will fail
-// var openpgp = require('openpgp');
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+window.openpgp = require('openpgp');
 
 // import util from './util';
 
@@ -20608,16 +20609,131 @@ window.openpgp = require('openpgp'); // Temp -- Tests will fail
 //                                       //
 ///////////////////////////////////////////
 
-
 /**
  * Example Function
  * Return String
  * @param  {String} data     text/data
  * @static
  */
-function example(data) {
-  return data;
-}
+
+var testPupKey = '-----BEGIN PGP PUBLIC KEY BLOCK-----\nVersion: GnuPG v2\n\nmI0EV7LUUAEEANWJNyAUN7Zy/oAbGh08dRYfXlXAyos3kF9movVMfFsHUhpnTstm\nqH0pgXib0vKyKmtJjm/UW7m2ODbeYDjwW+MdtEBmaUSqe6EgFMQdhok8waUMcdoq\nh8TewZmNSgkIkLD4J8cU+rPrzVUKKOf91HHhutnV/HFYNMLsYTjENJX5ABEBAAG0\nL0NocmlzdGlhbiBIYWhuICh0ZXN0a2V5KSA8Y2hhaG5AbGl2aW5nbG9naWMuZGU+\niLkEEwEIACMFAley1FACGwMHCwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRBd\n6Ew2nQpYucz9A/9TKnBME2JwRAXS8VVEMyGvPg0iwYAoy03vNIui0e/DdAqprgSa\ne87m00q7GI+kSNz2VOaBkaHRjjzI1b2WJ0BhYNsrXEwLVWmpkksw4EPUuvQk3a1O\nF1+0eyHshz2e1xORqmotXrOiWZChIUxFIZyRkOOYNuIbo9NpZeSVa4jQ9biNBFey\n1FABBADHpsjoi6kEavc1aWPdUBlObpRp1rlOgUYMrbf6EQxMAwhmVLWRSFuVfSK1\n1m3PAddMPG/66bkv6El9o2BaSn44DtQURc8EZ4fJvOo06Hm9/HJM8L/PbU1K4st3\nb34WymciUaowPVBSRKGrgJ7/mbDmcAHDFyZ0p85n0OW2k8tZUwARAQABiJ8EGAEI\nAAkFAley1FACGwwACgkQXehMNp0KWLnSOQQA0V0gI1Rb05jELDh0POZiPXdYSxf2\n7XDXzQXCxuzvx4JnzD6JYsnVmh6voKn8Tu0Pthy6wh03GqhEneGkggX1Rs7vLQMZ\nkPL1YG4cdMiAcXt+D+iMcaMJd7x2p4B5ypj+M85ornQgHirYowmGCVb++FTdn8pg\n0S1a1g21B+adqgE=\n=qRGF\n-----END PGP PUBLIC KEY BLOCK-----\n';
+
+var testPrivKey = '-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: GnuPG v2\n\nlQH+BFey1FABBADViTcgFDe2cv6AGxodPHUWH15VwMqLN5BfZqL1THxbB1IaZ07L\nZqh9KYF4m9LysiprSY5v1Fu5tjg23mA48FvjHbRAZmlEqnuhIBTEHYaJPMGlDHHa\nKofE3sGZjUoJCJCw+CfHFPqz681VCijn/dRx4brZ1fxxWDTC7GE4xDSV+QARAQAB\n/gMDAu3g+T7spFgQ41cinzqjvRLVI0ZcLbbBQnMcLSzCqPLk2jgy6wvjLg3/dyck\nRMbEyokoOAUyNLmVa1wWUWFnqMSHrMJz/FSoE2evT2OiLytQHf7hFEWWsGqBtq3s\nDPnwFbnrkN4SnJNuEtKzxrPsCT3Z1O2u/hC7/z25jIaPdMVLZOixjR86THxOnKCU\nCm80l2U5opHwR1uGYUWusGNRURoY/4pNGvXshznXA1uIMoxcAd4UiW0n3jRBs9lb\nljjCPGdQh49bYVIIni+sBBz9nU5N1+K/wlSzTEc83c/b1FpdTphzgdLaWADk326z\nhrNK1P5xzIr/cjBVjPbqj5OQ4PZsIhleC0wiGmfAsR+Q0Cy0ppDDGISrfy0qD32Q\nh6Lu2UakB8XxhjEfzgO9ZtHTG5w5lOzPHKg2GG6DjKk61EZ1kouliOENaJCG7tGk\n1e1I9H5fsdcVphGl8sKy6wVxZoMk+pAcY7oCD/r1pQ9FtC9DaHJpc3RpYW4gSGFo\nbiAodGVzdGtleSkgPGNoYWhuQGxpdmluZ2xvZ2ljLmRlPoi5BBMBCAAjBQJXstRQ\nAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQXehMNp0KWLnM/QP/Uypw\nTBNicEQF0vFVRDMhrz4NIsGAKMtN7zSLotHvw3QKqa4EmnvO5tNKuxiPpEjc9lTm\ngZGh0Y48yNW9lidAYWDbK1xMC1VpqZJLMOBD1Lr0JN2tThdftHsh7Ic9ntcTkapq\nLV6zolmQoSFMRSGckZDjmDbiG6PTaWXklWuI0PWdAf4EV7LUUAEEAMemyOiLqQRq\n9zVpY91QGU5ulGnWuU6BRgytt/oRDEwDCGZUtZFIW5V9IrXWbc8B10w8b/rpuS/o\nSX2jYFpKfjgO1BRFzwRnh8m86jToeb38ckzwv89tTUriy3dvfhbKZyJRqjA9UFJE\noauAnv+ZsOZwAcMXJnSnzmfQ5baTy1lTABEBAAH+AwMC7eD5PuykWBDj7wobC/pB\n+dod0PzUG6A8xRMvFMCrej/FFS3uYX2m1ZFoHr4PoPNZd3kzzUMxxeuO2SKf3VL9\nJ6dPa1nvnLBllxooR6e4G/8Moy1gsncuYaLSO+VsEs63gD9MKof5XgtzOiujBClf\nB1NkZ3HAmSZMQjoE/FghfHszguZadDW3AV+uCvTTtVydSV14GFiT2TrApswk0uYO\nDET2oYSQWFFx7DDkFoCDCVzszhZQVJcmn+fE87g03SxFr4ekL8zAmiYDndPU8of0\nmhzzbe2opqNrqrbIJ2qlnBp7ErP5Wov8gjq92o3mAI8oKFYfNoagqgUJwLNJOqNd\n3pycLX6+YDoRWCeSGZMGcH+YVINy12bDB5R83HgyE9C8kcYe7ITEczAQhk5ZvlJG\nI7sunsudd7/vIK7xnQHsn762ABJZATjEVpcR1Oaeew+CPs5m7IQbTOWVVF+mxeIx\neY+MR8RL73yZNI2alJWInwQYAQgACQUCV7LUUAIbDAAKCRBd6Ew2nQpYudI5BADR\nXSAjVFvTmMQsOHQ85mI9d1hLF/btcNfNBcLG7O/HgmfMPoliydWaHq+gqfxO7Q+2\nHLrCHTcaqESd4aSCBfVGzu8tAxmQ8vVgbhx0yIBxe34P6Ixxowl3vHangHnKmP4z\nzmiudCAeKtijCYYJVv74VN2fymDRLVrWDbUH5p2qAQ==\n=V3o4\n-----END PGP PRIVATE KEY BLOCK-----\n';
+
+(function ($) {
+	$.fn.fcrypto = function (opts) {
+		var ch = $.fn.fcrypto.cryptingHandler;
+		ch.cryptingLength = 0;
+		ch.elmsLength = this.length;
+		if ((typeof opts === 'undefined' ? 'undefined' : _typeof(opts)) === 'object') {
+			$.extend(defaults, opts);
+		}
+		return this.each(function (i) {
+			var elm = this,
+			    str;
+			if (ch.readyToCrypt(elm)) {
+				str = ch.getElementString(elm);
+				if (defaults.mode === 'encrypt') {
+					ch.encrypt(elm, str, defaults.publicKey, defaults.privateKey, function () {
+						ch.cryptingLength++;
+						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
+							defaults.onFinish();
+						}
+					});
+				} else {
+					ch.decrypt(elm, str, defaults.publicKey, defaults.privateKey, function () {
+						ch.cryptingLength++;
+						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
+							defaults.onFinish();
+						}
+					});
+				}
+			} else {
+				ch.cryptingLength++;
+			}
+			if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
+				defaults.onFinish();
+			}
+		});
+	};
+
+	$.fn.fcrypto.defaults = {
+		"publicKey": testPupKey,
+		"privateKey": testPrivKey,
+		"storeKeyInBrowserSession": false,
+		"useLib": 'openpgp',
+		"keyCreationBits": 2048,
+		"mode": 'encrypt',
+		"onFinish": null
+	};
+
+	$.fn.fcrypto.cryptingHandler = {
+		"elmsLength": 0,
+		"cryptingLength": 0,
+		"readyToCrypt": function readyToCrypt(elm) {
+			if ($(elm).children().length) {
+				if (window.console && window.console.log) {
+					console.log("The element has child nodes and can't be handled by fcrypto.");
+				}
+				return false;
+			}
+			return true;
+		},
+		"getElementString": function getElementString(elm) {
+			if (elm.hasAttribute('type') && $(elm).attr('type') === 'text' || elm.nodeName.toLowerCase() === 'textarea') {
+				return $(elm).val();
+			}
+			return $(elm).text();
+		},
+		"setElementString": function setElementString(elm, str) {
+			if (elm.hasAttribute('type') && $(elm).attr('type') === 'text' || elm.nodeName.toLowerCase() === 'textarea') {
+				$(elm).val(str);
+			} else {
+				$(elm).text(str);
+			}
+		},
+		// "getEncPassphrase": function(password, puk) {
+		// 	password = openpgp.util.str2Uint8Array(password);
+		// 	openpgp.encryptSessionKey({
+		// 		"data": password,
+		// 		"algorithm": 'aes128',
+		// 		"publicKeys": openpgp.key.readArmored(puk).keys
+		// 	}).then(function(msg){
+		// 		// > LOGGING
+		// 		if(window.console && window.console.log){
+		// 			console.log(msg.message.packets);
+		// 		}
+		// 		// < LOGGING
+		// 	});
+		// },
+		"encrypt": function encrypt(elm, str, puk, prk, callback) {
+			var opts = {
+				"data": str,
+				"publicKeys": openpgp.key.readArmored(puk).keys
+			};
+			openpgp.encrypt(opts).then(function (ciphertext) {
+				$.fn.fcrypto.cryptingHandler.setElementString(elm, ciphertext.data);
+				callback();
+			});
+		},
+		"decrypt": function decrypt(elm, str, puk, prk, callback) {
+			// var key = openpgp.key.readArmored(prk).keys[0].decrypt('ll123');
+			openpgp.decryptKey({
+				"privateKey": openpgp.key.readArmored(prk).keys[0],
+				"passphrase": 'll123'
+			}).then(function (unlocked) {
+				var opts = {
+					"message": openpgp.message.readArmored(str),
+					"privateKey": unlocked.key
+				};
+				openpgp.decrypt(opts).then(function (plaintext) {
+					$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data);
+					callback();
+				});
+			});
+		}
+	};
+})(jQuery);
 
 },{"openpgp":1}],3:[function(require,module,exports){
 'use strict';
