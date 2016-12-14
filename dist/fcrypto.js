@@ -20622,7 +20622,8 @@ var testPrivKey = '-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: GnuPG v2\n\nl
 
 (function ($) {
 	$.fn.fcrypto = function (opts) {
-		var ch = $.fn.fcrypto.cryptingHandler;
+		var ch = $.fn.fcrypto.cryptingHandler,
+		    defaults = $.fn.fcrypto.defaults;
 		ch.cryptingLength = 0;
 		ch.elmsLength = this.length;
 		if ((typeof opts === 'undefined' ? 'undefined' : _typeof(opts)) === 'object') {
@@ -20692,20 +20693,6 @@ var testPrivKey = '-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: GnuPG v2\n\nl
 				$(elm).text(str);
 			}
 		},
-		// "getEncPassphrase": function(password, puk) {
-		// 	password = openpgp.util.str2Uint8Array(password);
-		// 	openpgp.encryptSessionKey({
-		// 		"data": password,
-		// 		"algorithm": 'aes128',
-		// 		"publicKeys": openpgp.key.readArmored(puk).keys
-		// 	}).then(function(msg){
-		// 		// > LOGGING
-		// 		if(window.console && window.console.log){
-		// 			console.log(msg.message.packets);
-		// 		}
-		// 		// < LOGGING
-		// 	});
-		// },
 		"encrypt": function encrypt(elm, str, puk, prk, callback) {
 			var opts = {
 				"data": str,
@@ -20717,7 +20704,6 @@ var testPrivKey = '-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: GnuPG v2\n\nl
 			});
 		},
 		"decrypt": function decrypt(elm, str, puk, prk, callback) {
-			// var key = openpgp.key.readArmored(prk).keys[0].decrypt('ll123');
 			openpgp.decryptKey({
 				"privateKey": openpgp.key.readArmored(prk).keys[0],
 				"passphrase": 'll123'

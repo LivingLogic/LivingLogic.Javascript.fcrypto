@@ -97,7 +97,7 @@ zmiudCAeKtijCYYJVv74VN2fymDRLVrWDbUH5p2qAQ==
 
 (function($){
 	$.fn.fcrypto = function(opts){
-		var ch = $.fn.fcrypto.cryptingHandler;
+		var ch = $.fn.fcrypto.cryptingHandler, defaults = $.fn.fcrypto.defaults;
 		ch.cryptingLength = 0;
 		ch.elmsLength = this.length;
 		if (typeof(opts) === 'object'){
@@ -166,20 +166,6 @@ zmiudCAeKtijCYYJVv74VN2fymDRLVrWDbUH5p2qAQ==
 				$(elm).text(str);
 			}
 		},
-		// "getEncPassphrase": function(password, puk) {
-		// 	password = openpgp.util.str2Uint8Array(password);
-		// 	openpgp.encryptSessionKey({
-		// 		"data": password,
-		// 		"algorithm": 'aes128',
-		// 		"publicKeys": openpgp.key.readArmored(puk).keys
-		// 	}).then(function(msg){
-		// 		// > LOGGING
-		// 		if(window.console && window.console.log){
-		// 			console.log(msg.message.packets);
-		// 		}
-		// 		// < LOGGING
-		// 	});
-		// },
 		"encrypt": function(elm, str, puk, prk, callback) {
 			var opts = {
 				"data": str,
@@ -191,7 +177,6 @@ zmiudCAeKtijCYYJVv74VN2fymDRLVrWDbUH5p2qAQ==
 			});
 		},
 		"decrypt": function(elm, str, puk, prk, callback) {
-			// var key = openpgp.key.readArmored(prk).keys[0].decrypt('ll123');
 			openpgp.decryptKey({
 				"privateKey": openpgp.key.readArmored(prk).keys[0],
 				"passphrase": 'll123'
