@@ -20664,6 +20664,7 @@ var testPrivKey = '-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: GnuPG v2\n\nl
 		"storeKeyInBrowserSession": false,
 		"useLib": 'openpgp',
 		"keyCreationBits": 2048,
+		"keyCreationUnlockedKey": false,
 		"mode": 'encrypt',
 		"onFinish": null
 	};
@@ -20718,6 +20719,17 @@ var testPrivKey = '-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: GnuPG v2\n\nl
 				});
 			});
 		}
+	};
+
+	$.fn.fcrypto.generateKey = function (userIds, passphrase) {
+		var numBits = $.fn.fcrypto.defaults.keyCreationBits,
+		    unlockedKey = $.fn.fcrypto.defaults.keyCreationUnlockedKey;
+		return openpgp.generateKey({
+			"userIds": userIds,
+			"passphrase": passphrase,
+			"numBits": numBits,
+			"unlockedKey": unlockedKey
+		});
 	};
 })(jQuery);
 

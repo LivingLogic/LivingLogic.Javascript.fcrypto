@@ -137,6 +137,7 @@ zmiudCAeKtijCYYJVv74VN2fymDRLVrWDbUH5p2qAQ==
 		"storeKeyInBrowserSession": false,
 		"useLib": 'openpgp',
 		"keyCreationBits": 2048,
+		"keyCreationUnlockedKey": false,
 		"mode": 'encrypt',
 		"onFinish": null
 	};
@@ -192,4 +193,16 @@ zmiudCAeKtijCYYJVv74VN2fymDRLVrWDbUH5p2qAQ==
 			});
 		}
 	};
+
+	$.fn.fcrypto.generateKey = function(userIds, passphrase) {
+		var numBits = $.fn.fcrypto.defaults.keyCreationBits, unlockedKey = $.fn.fcrypto.defaults.keyCreationUnlockedKey;
+		return openpgp.generateKey({
+			"userIds": userIds,
+			"passphrase": passphrase,
+			"numBits": numBits,
+			"unlockedKey": unlockedKey
+		});
+	};
+
+
 }(jQuery));
