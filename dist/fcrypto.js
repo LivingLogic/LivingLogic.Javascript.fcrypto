@@ -20734,10 +20734,14 @@ window.openpgp = require('openpgp');
 					"message": openpgp.message.readArmored(str),
 					"privateKey": unlocked.key || unlocked
 				};
-				openpgp.decrypt(opts).then(function (plaintext) {
+				promise = openpgp.decrypt(opts);
+				promise.then(function (plaintext) {
 					$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data);
 					callback();
 				});
+				if (typeof defaults.onError === 'function') {
+					promise.catch(defaults.onError);
+				}
 				if (typeof defaults.sessionStorageHandler === 'function') {
 					defaults.sessionStorageHandler({
 						"element": elm,
