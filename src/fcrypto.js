@@ -23,20 +23,22 @@ window.openpgp = require('openpgp');
 // import util from './util';
 
 
-///////////////////////////////////////////
-//                                       //
-//   Example Header                      //
-//                                       //
-///////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+//                                                                               //
+//   jQuery plugin fcrypto.                                                      //
+//   Designed to provide simple encryption/decryption of form fields content     //
+//   with the jquery selector chaining.                                          //
+//                                                                               //
+///////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Example Function
- * Return String
- * @param  {String} data     text/data
- * @static
- */
 
 (function($){
+	/**
+	 * jQuery
+	 * @param  {String} data text/data
+	 * @static
+	 * Return String
+	 */
 	$.fn.fcrypto = function(opts){
 		var ch = $.fn.fcrypto.cryptingHandler, defaults = $.fn.fcrypto.defaults, passphrase = '';
 		ch.cryptingLength = 0;
@@ -180,6 +182,4 @@ window.openpgp = require('openpgp');
 			"unlockedKey": unlockedKey
 		});
 	};
-
-
 }(jQuery));
