@@ -1,5 +1,5 @@
 {
-  "name": "jquery-form-crypto",
+  "name": "fcrypto",
   "description": "",
   "version": "1.0.0",
   "homepage": "http://livinglogic.de",
@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/LivingLogic/LivingLogic.Javascript.crypto.git"
+    "url": "git://github.com/LivingLogic/LivingLogic.Javascript.fcrypto.git"
   },
   "main": "dist/fcrypto.js",
   "directories": {
