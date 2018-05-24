@@ -20698,13 +20698,13 @@ window.openpgp = require('openpgp');
 			return true;
 		},
 		"getElementString": function getElementString(elm) {
-			if (elm.hasAttribute('type') && $(elm).attr('type') === 'text' || elm.nodeName.toLowerCase() === 'textarea') {
+			if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password') || elm.nodeName.toLowerCase() === 'textarea') {
 				return $(elm).val();
 			}
 			return $(elm).text();
 		},
 		"setElementString": function setElementString(elm, str) {
-			if (elm.hasAttribute('type') && $(elm).attr('type') === 'text' || elm.nodeName.toLowerCase() === 'textarea') {
+			if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password') || elm.nodeName.toLowerCase() === 'textarea') {
 				$(elm).val(str);
 			} else {
 				$(elm).text(str);
