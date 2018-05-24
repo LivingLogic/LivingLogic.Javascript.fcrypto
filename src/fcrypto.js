@@ -115,15 +115,20 @@ window.openpgp = require('openpgp');
 			return true;
 		},
 		"getElementString": function(elm) {
-			if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password') || elm.nodeName.toLowerCase() === 'textarea'){
+			if (elm.nodeName.toLowerCase() === 'textarea'){
 				return $(elm).val();
+			} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')){
+				return $(elm).val().replace(/\\n/g, '\n');
 			}
 			return $(elm).text();
 		},
 		"setElementString": function(elm, str) {
-			if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password') || elm.nodeName.toLowerCase() === 'textarea'){
+			if (elm.nodeName.toLowerCase() === 'textarea'){
 				$(elm).val(str);
-			}else{
+			} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')){
+				str = str.replace(/\n/g, '\\n');
+				$(elm).val(str);
+			} else {
 				$(elm).text(str);
 			}
 		},
