@@ -2,11 +2,9 @@
 // Copyright (C) 2016 LivingLogic AG
 
 /* globals jQuery */
-/* globals util */
 /* globals openpgp */
 
 /**
- * @requires util
  * @requires openpgp
  * @module crypto
  */
@@ -19,8 +17,6 @@
 'use strict';
 
 window.openpgp = require('openpgp');
-
-// import util from './util';
 
 
 ///////////////////////////////////////////////////////////////////////////////////
