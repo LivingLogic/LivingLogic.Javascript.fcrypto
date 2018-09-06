@@ -28,7 +28,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "openpgp": "^4.0.1"
+    "openpgp": "^3.1.2"
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
