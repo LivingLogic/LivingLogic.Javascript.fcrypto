@@ -149,7 +149,8 @@ window.openpgp = require('openpgp');
 			decrypt = function(unlocked) {
 				var opts = {
 					"message": openpgp.message.readArmored(str),
-					"privateKeys": [unlocked.key || unlocked]
+					"privateKeys": [unlocked.key || unlocked],
+					"publicKeys": openpgp.key.readArmored(puk).keys
 				};
 				promise = openpgp.decrypt(opts);
 				promise.then(function(plaintext){
