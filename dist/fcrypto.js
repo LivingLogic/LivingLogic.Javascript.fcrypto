@@ -50660,7 +50660,8 @@ window.openpgp = require('openpgp');
 			    decrypt = function decrypt(unlocked) {
 				var opts = {
 					"message": openpgp.message.readArmored(str),
-					"privateKeys": [unlocked.key || unlocked]
+					"privateKeys": [unlocked.key || unlocked],
+					"publicKeys": puk
 				};
 				promise = openpgp.decrypt(opts);
 				promise.then(function (plaintext) {
