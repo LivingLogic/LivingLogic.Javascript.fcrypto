@@ -50662,6 +50662,7 @@ window.openpgp = require('openpgp');
 				    j,
 				    keyId,
 				    keyIds,
+				    puks,
 				    opts = {
 					"message": openpgp.message.readArmored(str),
 					"privateKeys": unlocked.key || unlocked

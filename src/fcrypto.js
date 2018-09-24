@@ -147,7 +147,7 @@ window.openpgp = require('openpgp');
 		"decrypt": function(elm, str, puk, prk, passphrase, callback) {
 			var defaults = $.fn.fcrypto.defaults, promise,
 			decrypt = function(unlocked) {
-				var i, j, keyId, keyIds, opts = {
+				var i, j, keyId, keyIds, puks, opts = {
 					"message": openpgp.message.readArmored(str),
 					"privateKeys": unlocked.key || unlocked
 				};
