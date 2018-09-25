@@ -147,16 +147,22 @@ window.openpgp = require('openpgp');
 		"decrypt": function(elm, str, puk, prk, passphrase, callback) {
 			var defaults = $.fn.fcrypto.defaults, promise,
 			decrypt = function(unlocked) {
-				var i, j, keyId, keyIds, puks, opts = {
+				var i, j, keyId, keyIds, puks, matchedKeyIds = [], opts = {
 					"message": openpgp.message.readArmored(str),
 					"privateKeys": unlocked.key || unlocked
 				};
 				keyIds = opts.message.getEncryptionKeyIds();
 				puks = openpgp.key.readArmored(puk).keys;
+
 				for (i = 0; i < keyIds.length; i++){
 					keyId = keyIds[i];
 					for (j = 0; j < puks.length; j++){
-						if (keyId.toHex() === puks[j].getKeyId().toHex()){
+						matchedKeyIds = puks[j].getKeyIds().map((item) => {
+							if (item.toHex() === keyId.toHex()){
+								return item;
+							}
+						});
+						if (matchedKeyIds.length){
 							promise = openpgp.decrypt(opts);
 							promise.then(function (plaintext) {
 								$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data);
@@ -174,6 +180,8 @@ window.openpgp = require('openpgp');
 						}
 					}
 				}
+
+
 				callback({"valid": false});
 			};
 			if (passphrase){
