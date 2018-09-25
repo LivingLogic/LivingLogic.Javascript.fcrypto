@@ -2,11 +2,9 @@
 // Copyright (C) 2016 LivingLogic AG
 
 /* globals jQuery */
-/* globals util */
 /* globals openpgp */
 
 /**
- * @requires util
  * @requires openpgp
  * @module crypto
  */
@@ -19,8 +17,6 @@
 'use strict';
 
 window.openpgp = require('openpgp');
-
-// import util from './util';
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -54,24 +50,24 @@ window.openpgp = require('openpgp');
 			if (ch.readyToCrypt(elm)){
 				str = ch.getElementString(elm);
 				if (defaults.mode === 'encrypt'){
-					ch.encrypt(elm, str, defaults.publicKey, defaults.privateKey, function(){
+					ch.encrypt(elm, str, defaults.publicKey, defaults.privateKey, function(status){
 						ch.cryptingLength++;
 						if (typeof(defaults.onEach) === 'function'){
-							defaults.onEach(elm);
+							defaults.onEach(elm, status);
 						}
 						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof(defaults.onFinish) === 'function'){
-							defaults.onFinish(elm);
+							defaults.onFinish(elm, status);
 						}
 					});
 				}else{
-					ch.decrypt(elm, str, defaults.publicKey, defaults.privateKey, passphrase, function(){
+					ch.decrypt(elm, str, defaults.publicKey, defaults.privateKey, passphrase, function(status){
 						ch.cryptingLength++;
 						if (typeof(defaults.onEach) === 'function'){
-							defaults.onEach(elm);
+							defaults.onEach(elm, status);
 						}
 						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof(defaults.onFinish) === 'function'){
 							defaults.passphrase = '';
-							defaults.onFinish(elm);
+							defaults.onFinish(elm, status);
 						}
 					});
 				}
@@ -115,15 +111,20 @@ window.openpgp = require('openpgp');
 			return true;
 		},
 		"getElementString": function(elm) {
-			if (elm.hasAttribute('type') && $(elm).attr('type') === 'text' || elm.nodeName.toLowerCase() === 'textarea'){
+			if (elm.nodeName.toLowerCase() === 'textarea'){
 				return $(elm).val();
+			} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')){
+				return $(elm).val().replace(/\\n/g, '\n');
 			}
 			return $(elm).text();
 		},
 		"setElementString": function(elm, str) {
-			if (elm.hasAttribute('type') && $(elm).attr('type') === 'text' || elm.nodeName.toLowerCase() === 'textarea'){
+			if (elm.nodeName.toLowerCase() === 'textarea'){
 				$(elm).val(str);
-			}else{
+			} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')){
+				str = str.replace(/\n/g, '\\n');
+				$(elm).val(str);
+			} else {
 				$(elm).text(str);
 			}
 		},
@@ -146,24 +147,42 @@ window.openpgp = require('openpgp');
 		"decrypt": function(elm, str, puk, prk, passphrase, callback) {
 			var defaults = $.fn.fcrypto.defaults, promise,
 			decrypt = function(unlocked) {
-				var opts = {
+				var i, j, keyId, keyIds, puks, matchedKeyIds = [], opts = {
 					"message": openpgp.message.readArmored(str),
-					"privateKey": unlocked.key || unlocked
+					"privateKeys": unlocked.key || unlocked
 				};
-				promise = openpgp.decrypt(opts);
-				promise.then(function(plaintext){
-					$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data);
-					callback();
-				});
-				if (typeof(defaults.onError) === 'function'){
-					promise.catch(defaults.onError);
+				keyIds = opts.message.getEncryptionKeyIds();
+				puks = openpgp.key.readArmored(puk).keys;
+
+				for (i = 0; i < keyIds.length; i++){
+					keyId = keyIds[i];
+					for (j = 0; j < puks.length; j++){
+						matchedKeyIds = puks[j].getKeyIds().map((item) => {
+							if (item.toHex() === keyId.toHex()){
+								return item;
+							}
+						});
+						if (matchedKeyIds.length){
+							promise = openpgp.decrypt(opts);
+							promise.then(function (plaintext) {
+								$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data);
+								callback({"valid": true});
+							});
+							if (typeof (defaults.onError) === 'function') {
+								promise.catch(defaults.onError);
+							}
+							if (typeof (defaults.sessionStorageHandler) === 'function') {
+								defaults.sessionStorageHandler({
+									"element": elm,
+									"privateKey": unlocked.key || unlocked
+								});
+							}
+						}
+					}
 				}
-				if (typeof(defaults.sessionStorageHandler) === 'function'){
-					defaults.sessionStorageHandler({
-						"element": elm,
-						"privateKey": unlocked.key || unlocked
-					});
-				}
+
+
+				callback({"valid": false});
 			};
 			if (passphrase){
 				promise = this.unlockKey(prk, passphrase);
