@@ -50674,10 +50674,8 @@ window.openpgp = require('openpgp');
 				for (i = 0; i < keyIds.length; i++) {
 					keyId = keyIds[i];
 					for (j = 0; j < puks.length; j++) {
-						matchedKeyIds = puks[j].getKeyIds().map(function (item) {
-							if (item.toHex() === keyId.toHex()) {
-								return item;
-							}
+						matchedKeyIds = puks[j].getKeyIds().filter(function (item) {
+							return item.toHex() === keyId.toHex();
 						});
 						if (matchedKeyIds.length) {
 							promise = openpgp.decrypt(opts);
