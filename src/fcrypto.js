@@ -173,12 +173,11 @@ window.openpgp = require('openpgp');
 									"privateKey": unlocked.key || unlocked
 								});
 							}
+						}else{
+							callback({ "valid": false });
 						}
 					}
 				}
-
-
-				callback({"valid": false});
 			};
 			if (passphrase){
 				promise = this.unlockKey(prk, passphrase);
