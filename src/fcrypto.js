@@ -110,6 +110,22 @@ window.openpgp = require('openpgp');
 			}
 			return true;
 		},
+		"verifyMessagePublicKeys": function(msgKeys, puKeys){
+			return new Promise ((resolve, reject) => {
+				var i, j, keyId, matchedKeyIds;
+				for (i = 0; i < msgKeys.length; i++) {
+					keyId = msgKeys[i];
+					for (j = 0; j < puKeys.length; j++) {
+						matchedKeyIds = puKeys[j].getKeyIds().filter(item => item.toHex() === keyId.toHex());
+						if (matchedKeyIds.length) {
+							resolve({"valid": true});
+						} else {
+							reject({ "valid": false });
+						}
+					}
+				}
+			});
+		},
 		"getElementString": function(elm) {
 			if (elm.nodeName.toLowerCase() === 'textarea'){
 				return $(elm).val();
@@ -145,7 +161,7 @@ window.openpgp = require('openpgp');
 			});
 		},
 		"decrypt": function(elm, str, puk, prk, passphrase, callback) {
-			var defaults = $.fn.fcrypto.defaults, promise,
+			var self = this, defaults = $.fn.fcrypto.defaults, promise,
 			decrypt = function(unlocked) {
 				var i, j, keyId, keyIds, puks, matchedKeyIds = [], opts = {
 					"message": openpgp.message.readArmored(str),
@@ -153,31 +169,25 @@ window.openpgp = require('openpgp');
 				};
 				keyIds = opts.message.getEncryptionKeyIds();
 				puks = openpgp.key.readArmored(puk).keys;
-
-				for (i = 0; i < keyIds.length; i++){
-					keyId = keyIds[i];
-					for (j = 0; j < puks.length; j++){
-						matchedKeyIds = puks[j].getKeyIds().filter(item => item.toHex() === keyId.toHex());
-						if (matchedKeyIds.length){
-							promise = openpgp.decrypt(opts);
-							promise.then(function (plaintext) {
-								$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data);
-								callback({"valid": true});
-							});
-							if (typeof (defaults.onError) === 'function') {
-								promise.catch(defaults.onError);
-							}
-							if (typeof (defaults.sessionStorageHandler) === 'function') {
-								defaults.sessionStorageHandler({
-									"element": elm,
-									"privateKey": unlocked.key || unlocked
-								});
-							}
-						}else{
-							callback({ "valid": false });
-						}
+				self.verifyMessagePublicKeys(keyIds, puks).then(function(status){
+					promise = openpgp.decrypt(opts);
+					promise.then(function (plaintext) {
+						$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data);
+						callback(status);
+					});
+					if (typeof (defaults.onError) === 'function') {
+						promise.catch(defaults.onError);
 					}
-				}
+					if (typeof (defaults.sessionStorageHandler) === 'function') {
+						defaults.sessionStorageHandler({
+							"element": elm,
+							"privateKey": unlocked.key || unlocked
+						});
+					}
+				})
+				.catch(function(status){
+					callback(status);
+				});
 			};
 			if (passphrase){
 				promise = this.unlockKey(prk, passphrase);
