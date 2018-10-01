@@ -50649,7 +50649,7 @@ window.openpgp = require('openpgp');
 		},
 		"setElementString": function setElementString(elm, str) {
 			if (typeof $.fn.fcrypto.defaults.catchStringReplace === 'function') {
-				$.fn.fcrypto.defaults.catchStringReplace(elm, str);
+				return $.fn.fcrypto.defaults.catchStringReplace(elm, str);
 			} else {
 				if (elm.nodeName.toLowerCase() === 'textarea') {
 					$(elm).val(str);
@@ -50660,6 +50660,7 @@ window.openpgp = require('openpgp');
 					$(elm).text(str);
 				}
 			}
+			return true;
 		},
 		"encrypt": function encrypt(elm, str, puk, prk, callback) {
 			var opts = {
@@ -50697,7 +50698,9 @@ window.openpgp = require('openpgp');
 				self.verifyMessagePublicKeys(keyIds, puks).then(function (status) {
 					promise = openpgp.decrypt(opts);
 					promise.then(function (plaintext) {
-						$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data);
+						status.setElementStrStatus = {
+							"break": !$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data)
+						};
 						callback(status);
 					});
 					if (typeof defaults.onError === 'function') {
