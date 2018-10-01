@@ -93,6 +93,7 @@ window.openpgp = require('openpgp');
 		"keyCreationUnlockedKey": false,
 		"sessionStorageHandler": null,
 		"mode": 'encrypt',
+		"catchStringReplace": null,
 		"onEach": null,
 		"onFinish": null,
 		"onError": null
@@ -135,13 +136,17 @@ window.openpgp = require('openpgp');
 			return $(elm).text();
 		},
 		"setElementString": function(elm, str) {
-			if (elm.nodeName.toLowerCase() === 'textarea'){
-				$(elm).val(str);
-			} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')){
-				str = str.replace(/\n/g, '\\n');
-				$(elm).val(str);
-			} else {
-				$(elm).text(str);
+			if (typeof($.fn.fcrypto.defaults.catchStringReplace) === 'function'){
+				$.fn.fcrypto.defaults.catchStringReplace(elm, str);
+			}else{
+				if (elm.nodeName.toLowerCase() === 'textarea'){
+					$(elm).val(str);
+				} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')){
+					str = str.replace(/\n/g, '\\n');
+					$(elm).val(str);
+				} else {
+					$(elm).text(str);
+				}
 			}
 		},
 		"encrypt": function(elm, str, puk, prk, callback) {
