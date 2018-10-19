@@ -176,11 +176,6 @@ module.exports = function(grunt) {
 			fileName: 'package.json',
 			version: version
 		});
-
-		patchFile({
-			fileName: 'bower.json',
-			version: version
-		});
 	});
 
 	function patchFile(options) {
