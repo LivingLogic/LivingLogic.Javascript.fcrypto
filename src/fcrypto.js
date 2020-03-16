@@ -16,9 +16,7 @@
 
 'use strict';
 
-if (typeof window !== "undefined") {
-	window.openpgp = require('openpgp');
-}
+window.openpgp = require('openpgp');
 
 ///////////////////////////////////////////////////////////////////////////////////
 //                                                                               //
