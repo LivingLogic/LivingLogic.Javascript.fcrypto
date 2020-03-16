@@ -88,10 +88,7 @@ module.exports = function (grunt) {
 			src: lintFiles,
 			build: ['Gruntfile.js', '*.json'],
 			options: {
-				jshintrc: '.jshintrc',
-				globals: {
-					"window": true
-				}
+				jshintrc: '.jshintrc'
 			}
 		},
 		jsdoc: {
@@ -107,8 +104,7 @@ module.exports = function (grunt) {
 			unittests: {
 				options: {
 					reporter: 'spec',
-					timeout: 120000,
-					globals: ['window']
+					timeout: 120000
 				},
 				src: ['test/unittests.js']
 			}

@@ -50504,11 +50504,11 @@ exports.default = AsyncProxy;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],2:[function(require,module,exports){
-/*jslint browser: true */
-/*global window:true, jQuery:true, openpgp:true */
-
 // crypto.js
 // Copyright (C) 2016 LivingLogic AG
+
+/* globals jQuery */
+/* globals openpgp */
 
 /**
  * @requires openpgp
@@ -50627,7 +50627,7 @@ window.openpgp = require('openpgp');
 				for (i = 0; i < msgKeys.length; i++) {
 					keyId = msgKeys[i];
 					for (j = 0; j < puKeys.length; j++) {
-						matchedKeyIds = puKeys[j].getKeyIds().filter(function (item, keyId) {
+						matchedKeyIds = puKeys[j].getKeyIds().filter(function (item) {
 							return item.toHex() === keyId.toHex();
 						});
 						if (matchedKeyIds.length) {
@@ -50683,8 +50683,12 @@ window.openpgp = require('openpgp');
 			    defaults = $.fn.fcrypto.defaults,
 			    promise,
 			    decrypt = function decrypt(unlocked) {
-				var keyIds,
+				var i,
+				    j,
+				    keyId,
+				    keyIds,
 				    puks,
+				    matchedKeyIds = [],
 				    opts = {
 					"message": openpgp.message.readArmored(str),
 					"privateKeys": unlocked.key || unlocked
