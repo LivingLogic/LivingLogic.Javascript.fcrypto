@@ -50505,8 +50505,8 @@ exports.default = AsyncProxy;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],2:[function(require,module,exports){
 /*jslint browser: true */
-
 /*global window:true, jQuery:true, openpgp:true */
+
 // crypto.js
 // Copyright (C) 2016 LivingLogic AG
 
@@ -50519,13 +50519,16 @@ exports.default = AsyncProxy;
  * @fileoverview The crypto base module. All additional classes are documented
  * for extending and developing on top of the base library.
  */
+
 'use strict';
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && _typeof(Symbol.iterator) === "symbol") { _typeof = function (_typeof2) { function _typeof(_x) { return _typeof2.apply(this, arguments); } _typeof.toString = function () { return _typeof2.toString(); }; return _typeof; }(function (obj) { return typeof obj === "undefined" ? "undefined" : _typeof(obj); }); } else { _typeof = function (_typeof3) { function _typeof(_x2) { return _typeof3.apply(this, arguments); } _typeof.toString = function () { return _typeof3.toString(); }; return _typeof; }(function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj); }); } return _typeof(obj); }
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 if (typeof window !== "undefined") {
-  window.openpgp = require('openpgp');
-} ///////////////////////////////////////////////////////////////////////////////////
+	window.openpgp = require('openpgp');
+}
+
+///////////////////////////////////////////////////////////////////////////////////
 //                                                                               //
 //   jQuery plugin fcrypto.                                                      //
 //   Designed to provide simple encryption/decryption of form fields content     //
@@ -50535,231 +50538,209 @@ if (typeof window !== "undefined") {
 
 
 (function ($) {
-  /**
-   * jQuery
-   * @param  {String} data text/data
-   * @static
-   * Return String
-   */
-  $.fn.fcrypto = function (opts) {
-    var ch = $.fn.fcrypto.cryptingHandler,
-        defaults = $.fn.fcrypto.defaults,
-        passphrase = '';
-    ch.cryptingLength = 0;
-    ch.elmsLength = this.length;
+	/**
+  * jQuery
+  * @param  {String} data text/data
+  * @static
+  * Return String
+  */
+	$.fn.fcrypto = function (opts) {
+		var ch = $.fn.fcrypto.cryptingHandler,
+		    defaults = $.fn.fcrypto.defaults,
+		    passphrase = '';
+		ch.cryptingLength = 0;
+		ch.elmsLength = this.length;
+		if ((typeof opts === 'undefined' ? 'undefined' : _typeof(opts)) === 'object') {
+			$.extend(defaults, opts);
+		}
+		if (defaults.passphrase) {
+			passphrase = defaults.passphrase;
+		}
+		return this.each(function (i) {
+			var elm = this,
+			    str;
+			if (ch.readyToCrypt(elm)) {
+				str = ch.getElementString(elm);
+				if (defaults.mode === 'encrypt') {
+					ch.encrypt(elm, str, defaults.publicKey, defaults.privateKey, function (status) {
+						ch.cryptingLength++;
+						if (typeof defaults.onEach === 'function') {
+							defaults.onEach(elm, status);
+						}
+						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
+							defaults.onFinish(elm, status);
+						}
+					});
+				} else {
+					ch.decrypt(elm, str, defaults.publicKey, defaults.privateKey, passphrase, function (status) {
+						ch.cryptingLength++;
+						if (typeof defaults.onEach === 'function') {
+							defaults.onEach(elm, status);
+						}
+						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
+							defaults.passphrase = '';
+							defaults.onFinish(elm, status);
+						}
+					});
+				}
+			} else {
+				ch.cryptingLength++;
+			}
+			if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
+				defaults.passphrase = '';
 
-    if ((typeof opts === "undefined" ? "undefined" : _typeof(opts)) === 'object') {
-      $.extend(defaults, opts);
-    }
+				defaults.onFinish(elm);
+			}
+		});
+	};
 
-    if (defaults.passphrase) {
-      passphrase = defaults.passphrase;
-    }
+	$.fn.fcrypto.defaults = {
+		"publicKey": '',
+		"privateKey": '',
+		"passphrase": '',
+		// "sessionStorageKey": '',
+		// "keysStorageUrl": '/gateway/keyserver',
+		// "useLib": 'openpgp',
+		"keyCreationBits": 2048,
+		"keyCreationUnlockedKey": false,
+		"sessionStorageHandler": null,
+		"mode": 'encrypt',
+		"catchStringReplace": null,
+		"onEach": null,
+		"onFinish": null,
+		"onError": null
+	};
 
-    return this.each(function (i) {
-      var elm = this,
-          str;
+	$.fn.fcrypto.cryptingHandler = {
+		"elmsLength": 0,
+		"cryptingLength": 0,
+		"readyToCrypt": function readyToCrypt(elm) {
+			if ($(elm).children().length) {
+				if (window.console && window.console.log) {
+					console.log("The element has child nodes and can't be handled by fcrypto.");
+				}
+				return false;
+			}
+			return true;
+		},
+		"verifyMessagePublicKeys": function verifyMessagePublicKeys(msgKeys, puKeys) {
+			return new Promise(function (resolve, reject) {
+				var i, j, keyId, matchedKeyIds;
+				for (i = 0; i < msgKeys.length; i++) {
+					keyId = msgKeys[i];
+					for (j = 0; j < puKeys.length; j++) {
+						matchedKeyIds = puKeys[j].getKeyIds().filter(function (item, keyId) {
+							return item.toHex() === keyId.toHex();
+						});
+						if (matchedKeyIds.length) {
+							resolve({ "valid": true });
+						} else {
+							reject({ "valid": false });
+						}
+					}
+				}
+			});
+		},
+		"getElementString": function getElementString(elm) {
+			if (elm.nodeName.toLowerCase() === 'textarea') {
+				return $(elm).val();
+			} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')) {
+				return $(elm).val().replace(/\\n/g, '\n');
+			}
+			return $(elm).text();
+		},
+		"setElementString": function setElementString(elm, str) {
+			if (typeof $.fn.fcrypto.defaults.catchStringReplace === 'function') {
+				return $.fn.fcrypto.defaults.catchStringReplace(elm, str);
+			} else {
+				if (elm.nodeName.toLowerCase() === 'textarea') {
+					$(elm).val(str);
+				} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')) {
+					str = str.replace(/\n/g, '\\n');
+					$(elm).val(str);
+				} else {
+					$(elm).text(str);
+				}
+			}
+			return true;
+		},
+		"encrypt": function encrypt(elm, str, puk, prk, callback) {
+			var opts = {
+				"data": str,
+				"publicKeys": openpgp.key.readArmored(puk).keys
+			};
+			openpgp.encrypt(opts).then(function (ciphertext) {
+				$.fn.fcrypto.cryptingHandler.setElementString(elm, ciphertext.data);
+				callback();
+			});
+		},
+		"unlockKey": function unlockKey(key, passphrase) {
+			return openpgp.decryptKey({
+				"privateKey": openpgp.key.readArmored(key).keys[0],
+				"passphrase": passphrase
+			});
+		},
+		"decrypt": function decrypt(elm, str, puk, prk, passphrase, callback) {
+			var self = this,
+			    defaults = $.fn.fcrypto.defaults,
+			    promise,
+			    decrypt = function decrypt(unlocked) {
+				var keyIds,
+				    puks,
+				    opts = {
+					"message": openpgp.message.readArmored(str),
+					"privateKeys": unlocked.key || unlocked
+				};
+				keyIds = opts.message.getEncryptionKeyIds();
+				puks = openpgp.key.readArmored(puk).keys;
+				self.verifyMessagePublicKeys(keyIds, puks).then(function (status) {
+					promise = openpgp.decrypt(opts);
+					promise.then(function (plaintext) {
+						status.setElementStrStatus = {
+							"break": !$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data)
+						};
+						callback(status);
+					});
+					if (typeof defaults.onError === 'function') {
+						promise.catch(defaults.onError);
+					}
+					if (typeof defaults.sessionStorageHandler === 'function') {
+						defaults.sessionStorageHandler({
+							"element": elm,
+							"privateKey": unlocked.key || unlocked
+						});
+					}
+				}).catch(function (status) {
+					callback(status);
+				});
+			};
+			if (passphrase) {
+				promise = this.unlockKey(prk, passphrase);
+				promise.then(decrypt);
+				if (typeof defaults.onError === 'function') {
+					promise.catch(defaults.onError);
+				}
+			} else {
+				decrypt(openpgp.key.readArmored(prk).keys[0]);
+			}
+		}
+	};
 
-      if (ch.readyToCrypt(elm)) {
-        str = ch.getElementString(elm);
-
-        if (defaults.mode === 'encrypt') {
-          ch.encrypt(elm, str, defaults.publicKey, defaults.privateKey, function (status) {
-            ch.cryptingLength++;
-
-            if (typeof defaults.onEach === 'function') {
-              defaults.onEach(elm, status);
-            }
-
-            if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
-              defaults.onFinish(elm, status);
-            }
-          });
-        } else {
-          ch.decrypt(elm, str, defaults.publicKey, defaults.privateKey, passphrase, function (status) {
-            ch.cryptingLength++;
-
-            if (typeof defaults.onEach === 'function') {
-              defaults.onEach(elm, status);
-            }
-
-            if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
-              defaults.passphrase = '';
-              defaults.onFinish(elm, status);
-            }
-          });
-        }
-      } else {
-        ch.cryptingLength++;
-      }
-
-      if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
-        defaults.passphrase = '';
-        defaults.onFinish(elm);
-      }
-    });
-  };
-
-  $.fn.fcrypto.defaults = {
-    "publicKey": '',
-    "privateKey": '',
-    "passphrase": '',
-    // "sessionStorageKey": '',
-    // "keysStorageUrl": '/gateway/keyserver',
-    // "useLib": 'openpgp',
-    "keyCreationBits": 2048,
-    "keyCreationUnlockedKey": false,
-    "sessionStorageHandler": null,
-    "mode": 'encrypt',
-    "catchStringReplace": null,
-    "onEach": null,
-    "onFinish": null,
-    "onError": null
-  };
-  $.fn.fcrypto.cryptingHandler = {
-    "elmsLength": 0,
-    "cryptingLength": 0,
-    "readyToCrypt": function readyToCrypt(elm) {
-      if ($(elm).children().length) {
-        if (window.console && window.console.log) {
-          console.log("The element has child nodes and can't be handled by fcrypto.");
-        }
-
-        return false;
-      }
-
-      return true;
-    },
-    "verifyMessagePublicKeys": function verifyMessagePublicKeys(msgKeys, puKeys) {
-      return new Promise(function (resolve, reject) {
-        var i, j, keyId, matchedKeyIds;
-
-        for (i = 0; i < msgKeys.length; i++) {
-          keyId = msgKeys[i];
-
-          for (j = 0; j < puKeys.length; j++) {
-            matchedKeyIds = puKeys[j].getKeyIds().filter(function (item, keyId) {
-              return item.toHex() === keyId.toHex();
-            });
-
-            if (matchedKeyIds.length) {
-              resolve({
-                "valid": true
-              });
-            } else {
-              reject({
-                "valid": false
-              });
-            }
-          }
-        }
-      });
-    },
-    "getElementString": function getElementString(elm) {
-      if (elm.nodeName.toLowerCase() === 'textarea') {
-        return $(elm).val();
-      } else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')) {
-        return $(elm).val().replace(/\\n/g, '\n');
-      }
-
-      return $(elm).text();
-    },
-    "setElementString": function setElementString(elm, str) {
-      if (typeof $.fn.fcrypto.defaults.catchStringReplace === 'function') {
-        return $.fn.fcrypto.defaults.catchStringReplace(elm, str);
-      } else {
-        if (elm.nodeName.toLowerCase() === 'textarea') {
-          $(elm).val(str);
-        } else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')) {
-          str = str.replace(/\n/g, '\\n');
-          $(elm).val(str);
-        } else {
-          $(elm).text(str);
-        }
-      }
-
-      return true;
-    },
-    "encrypt": function encrypt(elm, str, puk, prk, callback) {
-      var opts = {
-        "data": str,
-        "publicKeys": openpgp.key.readArmored(puk).keys
-      };
-      openpgp.encrypt(opts).then(function (ciphertext) {
-        $.fn.fcrypto.cryptingHandler.setElementString(elm, ciphertext.data);
-        callback();
-      });
-    },
-    "unlockKey": function unlockKey(key, passphrase) {
-      return openpgp.decryptKey({
-        "privateKey": openpgp.key.readArmored(key).keys[0],
-        "passphrase": passphrase
-      });
-    },
-    "decrypt": function decrypt(elm, str, puk, prk, passphrase, callback) {
-      var self = this,
-          defaults = $.fn.fcrypto.defaults,
-          promise,
-          decrypt = function decrypt(unlocked) {
-        var keyIds,
-            puks,
-            opts = {
-          "message": openpgp.message.readArmored(str),
-          "privateKeys": unlocked.key || unlocked
-        };
-        keyIds = opts.message.getEncryptionKeyIds();
-        puks = openpgp.key.readArmored(puk).keys;
-        self.verifyMessagePublicKeys(keyIds, puks).then(function (status) {
-          promise = openpgp.decrypt(opts);
-          promise.then(function (plaintext) {
-            status.setElementStrStatus = {
-              "break": !$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data)
-            };
-            callback(status);
-          });
-
-          if (typeof defaults.onError === 'function') {
-            promise.catch(defaults.onError);
-          }
-
-          if (typeof defaults.sessionStorageHandler === 'function') {
-            defaults.sessionStorageHandler({
-              "element": elm,
-              "privateKey": unlocked.key || unlocked
-            });
-          }
-        }).catch(function (status) {
-          callback(status);
-        });
-      };
-
-      if (passphrase) {
-        promise = this.unlockKey(prk, passphrase);
-        promise.then(decrypt);
-
-        if (typeof defaults.onError === 'function') {
-          promise.catch(defaults.onError);
-        }
-      } else {
-        decrypt(openpgp.key.readArmored(prk).keys[0]);
-      }
-    }
-  };
-
-  $.fn.fcrypto.generateKey = function (userIds, passphrase) {
-    var numBits = $.fn.fcrypto.defaults.keyCreationBits,
-        unlockedKey = $.fn.fcrypto.defaults.keyCreationUnlockedKey;
-    return openpgp.generateKey({
-      "userIds": userIds,
-      "passphrase": passphrase,
-      "numBits": numBits,
-      "unlockedKey": unlockedKey
-    });
-  };
+	$.fn.fcrypto.generateKey = function (userIds, passphrase) {
+		var numBits = $.fn.fcrypto.defaults.keyCreationBits,
+		    unlockedKey = $.fn.fcrypto.defaults.keyCreationUnlockedKey;
+		return openpgp.generateKey({
+			"userIds": userIds,
+			"passphrase": passphrase,
+			"numBits": numBits,
+			"unlockedKey": unlockedKey
+		});
+	};
 })(jQuery);
 
 },{"openpgp":1}],3:[function(require,module,exports){
 'use strict';
+
 /**
  * Export high level api as default.
  * Usage:
@@ -50768,14 +50749,12 @@ if (typeof window !== "undefined") {
  *   crypto.encryptMessage(keys, text)
  */
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && _typeof(Symbol.iterator) === "symbol") { _typeof = function (_typeof2) { function _typeof(_x) { return _typeof2.apply(this, arguments); } _typeof.toString = function () { return _typeof2.toString(); }; return _typeof; }(function (obj) { return typeof obj === "undefined" ? "undefined" : _typeof(obj); }); } else { _typeof = function (_typeof3) { function _typeof(_x2) { return _typeof3.apply(this, arguments); } _typeof.toString = function () { return _typeof3.toString(); }; return _typeof; }(function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj); }); } return _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.util = undefined;
 
-var _fcrypto = require("./fcrypto");
+var _fcrypto = require('./fcrypto');
 
 Object.keys(_fcrypto).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -50787,9 +50766,9 @@ Object.keys(_fcrypto).forEach(function (key) {
   });
 });
 
-var _util = require("./util");
+var _util = require('./util');
 
-Object.defineProperty(exports, "util", {
+Object.defineProperty(exports, 'util', {
   enumerable: true,
   get: function get() {
     return _interopRequireDefault(_util).default;
@@ -50798,13 +50777,12 @@ Object.defineProperty(exports, "util", {
 
 var fcrypto = _interopRequireWildcard(_fcrypto);
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || (typeof obj === "undefined" ? "undefined" : _typeof(obj)) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = fcrypto;
+
 /**
  * Export each high level api function seperately.
  * Usage:
@@ -50818,47 +50796,36 @@ exports.default = fcrypto;
  * This object contains utility functions
  * @module util
  */
+
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 exports.default = {
-  getBrowser: function getBrowser() {
-    var ua = navigator.userAgent,
-        tem,
-        M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-
-    if (/trident/i.test(M[1])) {
-      tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-      return {
-        name: 'IE',
-        version: tem[1] || ''
-      };
-    }
-
-    if (M[1] === 'Chrome') {
-      tem = ua.match(/\bOPR|Edge\/(\d+)/);
-
-      if (tem != null) {
-        return {
-          name: 'Opera',
-          version: tem[1]
-        };
-      }
-    }
-
-    M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
-
-    if ((tem = ua.match(/version\/(\d+)/i)) != null) {
-      M.splice(1, 1, tem[1]);
-    }
-
-    return {
-      name: M[0],
-      version: M[1]
-    };
-  }
+	getBrowser: function getBrowser() {
+		var ua = navigator.userAgent,
+		    tem,
+		    M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+		if (/trident/i.test(M[1])) {
+			tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+			return { name: 'IE', version: tem[1] || '' };
+		}
+		if (M[1] === 'Chrome') {
+			tem = ua.match(/\bOPR|Edge\/(\d+)/);
+			if (tem != null) {
+				return { name: 'Opera', version: tem[1] };
+			}
+		}
+		M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+		if ((tem = ua.match(/version\/(\d+)/i)) != null) {
+			M.splice(1, 1, tem[1]);
+		}
+		return {
+			name: M[0],
+			version: M[1]
+		};
+	}
 };
 
 },{}]},{},[3])(3)
