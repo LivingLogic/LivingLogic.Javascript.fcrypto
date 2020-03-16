@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
 	var lintFiles = [
 		'src/*.js'
@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 		browserify: {
 			fcrypto: {
 				files: {
-					'dist/fcrypto.js': [ './src/index.js' ]
+					'dist/fcrypto.js': ['./src/index.js']
 				},
 				options: {
 					browserifyOptions: {
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
 			},
 			fcrypto_debug: {
 				files: {
-					'dist/fcrypto_debug.js': [ './src/index.js' ]
+					'dist/fcrypto_debug.js': ['./src/index.js']
 				},
 				options: {
 					browserifyOptions: {
@@ -48,10 +48,10 @@ module.exports = function(grunt) {
 			},
 			unittests: {
 				files: {
-					'test/lib/unittests-bundle.js': [ './test/unittests.js' ]
+					'test/lib/unittests-bundle.js': ['./test/unittests.js']
 				},
 				options: {
-					external: [ 'fcrypto', '../../dist/fcrypto', '../../../dist/fcrypto' ]
+					external: ['fcrypto', '../../dist/fcrypto', '../../../dist/fcrypto']
 				}
 			}
 		},
@@ -76,7 +76,7 @@ module.exports = function(grunt) {
 		uglify: {
 			fcrypto: {
 				files: {
-					'dist/fcrypto.min.js' : [ 'dist/fcrypto.js' ]
+					'dist/fcrypto.min.js': ['dist/fcrypto.js']
 				}
 			},
 			options: {
@@ -88,7 +88,10 @@ module.exports = function(grunt) {
 			src: lintFiles,
 			build: ['Gruntfile.js', '*.json'],
 			options: {
-				jshintrc: '.jshintrc'
+				jshintrc: '.jshintrc',
+				globals: {
+					"window": true
+				}
 			}
 		},
 		jsdoc: {
@@ -104,9 +107,10 @@ module.exports = function(grunt) {
 			unittests: {
 				options: {
 					reporter: 'spec',
-					timeout: 120000
+					timeout: 120000,
+					globals: ['window']
 				},
-				src: [ 'test/unittests.js' ]
+				src: ['test/unittests.js']
 			}
 		},
 		copy: {
@@ -167,7 +171,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-notify');
 
-	grunt.registerTask('set_version', function() {
+	grunt.registerTask('set_version', function () {
 		if (!version) {
 			throw new Error('You must specify the version: "--release=1.0.0"');
 		}

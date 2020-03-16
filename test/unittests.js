@@ -1,14 +1,17 @@
-(typeof window !== 'undefined' ? window : global).resolves = function(val) {
-  return new Promise(function(res) { res(val); });
+/*jslint browser: true */
+/*global window, jQuery */
+
+(typeof window !== 'undefined' ? window : global).resolves = function (val) {
+  return new Promise(function (res) { res(val); });
 };
 
-(typeof window !== 'undefined' ? window : global).rejects = function(val) {
-  return new Promise(function(res, rej) { rej(val); });
+(typeof window !== 'undefined' ? window : global).rejects = function (val) {
+  return new Promise(function (res, rej) { rej(val); });
 };
 
-(typeof window !== 'undefined' ? window : global).tryTests = function(name, tests, options) {
+(typeof window !== 'undefined' ? window : global).tryTests = function (name, tests, options) {
   if (options.if) {
-    describe(name, function() {
+    describe(name, function () {
       if (options.before) { before(options.before); }
       if (options.beforeEach) { beforeEach(options.beforeEach); }
 
