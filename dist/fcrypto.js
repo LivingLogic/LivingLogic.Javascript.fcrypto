@@ -1,6 +1,94 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.fcrypto = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-(function (global){
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.openpgp = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {var require;var require;(function(f){if(true){module.exports=f()}else { var g; }})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return require(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
 'use strict';
 
 var _classCallCheck2 = _dereq_('babel-runtime/helpers/classCallCheck');
@@ -32395,10 +32483,7 @@ exports.default = {
               // or s = 0 if signatures are generated properly.
 
             case 9:
-              if (!true) {
-                _context.next = 23;
-                break;
-              }
+              if (false) {}
 
               _context.next = 12;
               return _random2.default.getRandomBN(one, q);
@@ -50502,8 +50587,53 @@ exports.default = AsyncProxy;
 },{"../crypto":338,"../packet":369,"../util.js":396,"babel-runtime/core-js/promise":32,"babel-runtime/helpers/asyncToGenerator":35,"babel-runtime/helpers/toConsumableArray":41,"babel-runtime/regenerator":43}]},{},[359])(359)
 });
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],2:[function(require,module,exports){
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "util", function() { return /* reexport */ util; });
+
+// NAMESPACE OBJECT: ./src/fcrypto.js
+var fcrypto_namespaceObject = {};
+__webpack_require__.r(fcrypto_namespaceObject);
+
+// EXTERNAL MODULE: ./node_modules/openpgp/dist/openpgp.js
+var openpgp = __webpack_require__(0);
+
+// CONCATENATED MODULE: ./src/fcrypto.js
 // crypto.js
 // Copyright (C) 2016 LivingLogic AG
 
@@ -50520,11 +50650,12 @@ exports.default = AsyncProxy;
  * for extending and developing on top of the base library.
  */
 
-'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-window.openpgp = require('openpgp');
+
+window.openpgp = openpgp;
+// window.openpgp = require('openpgp');
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 //                                                                               //
@@ -50535,56 +50666,53 @@ window.openpgp = require('openpgp');
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-(function ($) {
+(function($){
 	/**
-  * jQuery
-  * @param  {String} data text/data
-  * @static
-  * Return String
-  */
-	$.fn.fcrypto = function (opts) {
-		var ch = $.fn.fcrypto.cryptingHandler,
-		    defaults = $.fn.fcrypto.defaults,
-		    passphrase = '';
+	 * jQuery
+	 * @param  {String} data text/data
+	 * @static
+	 * Return String
+	 */
+	$.fn.fcrypto = function(opts){
+		var ch = $.fn.fcrypto.cryptingHandler, defaults = $.fn.fcrypto.defaults, passphrase = '';
 		ch.cryptingLength = 0;
 		ch.elmsLength = this.length;
-		if ((typeof opts === 'undefined' ? 'undefined' : _typeof(opts)) === 'object') {
+		if (typeof(opts) === 'object'){
 			$.extend(defaults, opts);
 		}
-		if (defaults.passphrase) {
+		if (defaults.passphrase){
 			passphrase = defaults.passphrase;
 		}
-		return this.each(function (i) {
-			var elm = this,
-			    str;
-			if (ch.readyToCrypt(elm)) {
+		return this.each(function(i) {
+			var elm = this, str;
+			if (ch.readyToCrypt(elm)){
 				str = ch.getElementString(elm);
-				if (defaults.mode === 'encrypt') {
-					ch.encrypt(elm, str, defaults.publicKey, defaults.privateKey, function (status) {
+				if (defaults.mode === 'encrypt'){
+					ch.encrypt(elm, str, defaults.publicKey, defaults.privateKey, function(status){
 						ch.cryptingLength++;
-						if (typeof defaults.onEach === 'function') {
+						if (typeof(defaults.onEach) === 'function'){
 							defaults.onEach(elm, status);
 						}
-						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
+						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof(defaults.onFinish) === 'function'){
 							defaults.onFinish(elm, status);
 						}
 					});
-				} else {
-					ch.decrypt(elm, str, defaults.publicKey, defaults.privateKey, passphrase, function (status) {
+				}else{
+					ch.decrypt(elm, str, defaults.publicKey, defaults.privateKey, passphrase, function(status){
 						ch.cryptingLength++;
-						if (typeof defaults.onEach === 'function') {
+						if (typeof(defaults.onEach) === 'function'){
 							defaults.onEach(elm, status);
 						}
-						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
+						if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof(defaults.onFinish) === 'function'){
 							defaults.passphrase = '';
 							defaults.onFinish(elm, status);
 						}
 					});
 				}
-			} else {
+			}else{
 				ch.cryptingLength++;
 			}
-			if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof defaults.onFinish === 'function') {
+			if (i === ch.elmsLength - 1 && ch.cryptingLength === ch.elmsLength && typeof(defaults.onFinish) === 'function'){
 				defaults.passphrase = '';
 
 				defaults.onFinish(elm);
@@ -50612,26 +50740,24 @@ window.openpgp = require('openpgp');
 	$.fn.fcrypto.cryptingHandler = {
 		"elmsLength": 0,
 		"cryptingLength": 0,
-		"readyToCrypt": function readyToCrypt(elm) {
-			if ($(elm).children().length) {
-				if (window.console && window.console.log) {
+		"readyToCrypt": function(elm) {
+			if ($(elm).children().length){
+				if(window.console && window.console.log){
 					console.log("The element has child nodes and can't be handled by fcrypto.");
 				}
 				return false;
 			}
 			return true;
 		},
-		"verifyMessagePublicKeys": function verifyMessagePublicKeys(msgKeys, puKeys) {
-			return new Promise(function (resolve, reject) {
+		"verifyMessagePublicKeys": function(msgKeys, puKeys){
+			return new Promise ((resolve, reject) => {
 				var i, j, keyId, matchedKeyIds;
 				for (i = 0; i < msgKeys.length; i++) {
 					keyId = msgKeys[i];
 					for (j = 0; j < puKeys.length; j++) {
-						matchedKeyIds = puKeys[j].getKeyIds().filter(function (item) {
-							return item.toHex() === keyId.toHex();
-						});
+						matchedKeyIds = puKeys[j].getKeyIds().filter(item => item.toHex() === keyId.toHex());
 						if (matchedKeyIds.length) {
-							resolve({ "valid": true });
+							resolve({"valid": true});
 						} else {
 							reject({ "valid": false });
 						}
@@ -50639,21 +50765,21 @@ window.openpgp = require('openpgp');
 				}
 			});
 		},
-		"getElementString": function getElementString(elm) {
-			if (elm.nodeName.toLowerCase() === 'textarea') {
+		"getElementString": function(elm) {
+			if (elm.nodeName.toLowerCase() === 'textarea'){
 				return $(elm).val();
-			} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')) {
+			} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')){
 				return $(elm).val().replace(/\\n/g, '\n');
 			}
 			return $(elm).text();
 		},
-		"setElementString": function setElementString(elm, str) {
-			if (typeof $.fn.fcrypto.defaults.catchStringReplace === 'function') {
+		"setElementString": function(elm, str) {
+			if (typeof($.fn.fcrypto.defaults.catchStringReplace) === 'function'){
 				return $.fn.fcrypto.defaults.catchStringReplace(elm, str);
-			} else {
-				if (elm.nodeName.toLowerCase() === 'textarea') {
+			}else{
+				if (elm.nodeName.toLowerCase() === 'textarea'){
 					$(elm).val(str);
-				} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')) {
+				} else if (elm.hasAttribute('type') && ($(elm).attr('type') === 'text' || $(elm).attr('type') === 'password')){
 					str = str.replace(/\n/g, '\\n');
 					$(elm).val(str);
 				} else {
@@ -50662,86 +50788,104 @@ window.openpgp = require('openpgp');
 			}
 			return true;
 		},
-		"encrypt": function encrypt(elm, str, puk, prk, callback) {
+		"encrypt": function(elm, str, puk, prk, callback) {
 			var opts = {
 				"data": str,
-				"publicKeys": openpgp.key.readArmored(puk).keys
+				"publicKeys": openpgp["key"].readArmored(puk).keys
 			};
-			openpgp.encrypt(opts).then(function (ciphertext) {
+			openpgp["encrypt"](opts).then(function(ciphertext){
 				$.fn.fcrypto.cryptingHandler.setElementString(elm, ciphertext.data);
 				callback();
 			});
 		},
-		"unlockKey": function unlockKey(key, passphrase) {
-			return openpgp.decryptKey({
-				"privateKey": openpgp.key.readArmored(key).keys[0],
+		"unlockKey": function(key, passphrase) {
+			return openpgp["decryptKey"]({
+				"privateKey": openpgp["key"].readArmored(key).keys[0],
 				"passphrase": passphrase
 			});
 		},
-		"decrypt": function decrypt(elm, str, puk, prk, passphrase, callback) {
-			var self = this,
-			    defaults = $.fn.fcrypto.defaults,
-			    promise,
-			    decrypt = function decrypt(unlocked) {
-				var i,
-				    j,
-				    keyId,
-				    keyIds,
-				    puks,
-				    matchedKeyIds = [],
-				    opts = {
-					"message": openpgp.message.readArmored(str),
+		"decrypt": function(elm, str, puk, prk, passphrase, callback) {
+			var self = this, defaults = $.fn.fcrypto.defaults, promise,
+			decrypt = function(unlocked) {
+				var i, j, keyId, keyIds, puks, matchedKeyIds = [], opts = {
+					"message": openpgp["message"].readArmored(str),
 					"privateKeys": unlocked.key || unlocked
 				};
 				keyIds = opts.message.getEncryptionKeyIds();
-				puks = openpgp.key.readArmored(puk).keys;
-				self.verifyMessagePublicKeys(keyIds, puks).then(function (status) {
-					promise = openpgp.decrypt(opts);
+				puks = openpgp["key"].readArmored(puk).keys;
+				self.verifyMessagePublicKeys(keyIds, puks).then(function(status){
+					promise = openpgp["decrypt"](opts);
 					promise.then(function (plaintext) {
 						status.setElementStrStatus = {
 							"break": !$.fn.fcrypto.cryptingHandler.setElementString(elm, plaintext.data)
 						};
 						callback(status);
 					});
-					if (typeof defaults.onError === 'function') {
+					if (typeof (defaults.onError) === 'function') {
 						promise.catch(defaults.onError);
 					}
-					if (typeof defaults.sessionStorageHandler === 'function') {
+					if (typeof (defaults.sessionStorageHandler) === 'function') {
 						defaults.sessionStorageHandler({
 							"element": elm,
 							"privateKey": unlocked.key || unlocked
 						});
 					}
-				}).catch(function (status) {
+				})
+				.catch(function(status){
 					callback(status);
 				});
 			};
-			if (passphrase) {
+			if (passphrase){
 				promise = this.unlockKey(prk, passphrase);
 				promise.then(decrypt);
-				if (typeof defaults.onError === 'function') {
+				if (typeof(defaults.onError) === 'function'){
 					promise.catch(defaults.onError);
 				}
-			} else {
-				decrypt(openpgp.key.readArmored(prk).keys[0]);
+			}else{
+				decrypt(openpgp["key"].readArmored(prk).keys[0]);
 			}
 		}
 	};
 
-	$.fn.fcrypto.generateKey = function (userIds, passphrase) {
-		var numBits = $.fn.fcrypto.defaults.keyCreationBits,
-		    unlockedKey = $.fn.fcrypto.defaults.keyCreationUnlockedKey;
-		return openpgp.generateKey({
+	$.fn.fcrypto.generateKey = function(userIds, passphrase) {
+		var numBits = $.fn.fcrypto.defaults.keyCreationBits, unlockedKey = $.fn.fcrypto.defaults.keyCreationUnlockedKey;
+		return openpgp["generateKey"]({
 			"userIds": userIds,
 			"passphrase": passphrase,
 			"numBits": numBits,
 			"unlockedKey": unlockedKey
 		});
 	};
-})(jQuery);
+}(jQuery));
+// CONCATENATED MODULE: ./src/util.js
+/**
+ * This object contains utility functions
+ * @module util
+ */
 
-},{"openpgp":1}],3:[function(require,module,exports){
-'use strict';
+
+
+/* harmony default export */ var util = ({
+	getBrowser: function() {
+		var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+		if(/trident/i.test(M[1])){
+			tem=/\brv[ :]+(\d+)/g.exec(ua) || [];
+				return {name:'IE',version:(tem[1]||'')};
+			}
+		if(M[1]==='Chrome'){
+			tem=ua.match(/\bOPR|Edge\/(\d+)/);
+			if(tem!=null) {return {name:'Opera', version:tem[1]};}
+		}
+		M=M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+		if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+		return {
+			name: M[0],
+			version: M[1]
+		};
+	}
+});
+// CONCATENATED MODULE: ./src/index.js
+
 
 /**
  * Export high level api as default.
@@ -50751,39 +50895,7 @@ window.openpgp = require('openpgp');
  *   crypto.encryptMessage(keys, text)
  */
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.util = undefined;
-
-var _fcrypto = require('./fcrypto');
-
-Object.keys(_fcrypto).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _fcrypto[key];
-    }
-  });
-});
-
-var _util = require('./util');
-
-Object.defineProperty(exports, 'util', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_util).default;
-  }
-});
-
-var fcrypto = _interopRequireWildcard(_fcrypto);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = fcrypto;
+/* harmony default export */ var src = __webpack_exports__["default"] = (fcrypto_namespaceObject);
 
 /**
  * Export each high level api function seperately.
@@ -50793,42 +50905,12 @@ exports.default = fcrypto;
  *   encryptMessage(keys, text)
  */
 
-},{"./fcrypto":2,"./util":4}],4:[function(require,module,exports){
+
 /**
- * This object contains utility functions
- * @module util
+ * @see module:util
+ * @name module:crypto.util
  */
 
-'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = {
-	getBrowser: function getBrowser() {
-		var ua = navigator.userAgent,
-		    tem,
-		    M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-		if (/trident/i.test(M[1])) {
-			tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-			return { name: 'IE', version: tem[1] || '' };
-		}
-		if (M[1] === 'Chrome') {
-			tem = ua.match(/\bOPR|Edge\/(\d+)/);
-			if (tem != null) {
-				return { name: 'Opera', version: tem[1] };
-			}
-		}
-		M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
-		if ((tem = ua.match(/version\/(\d+)/i)) != null) {
-			M.splice(1, 1, tem[1]);
-		}
-		return {
-			name: M[0],
-			version: M[1]
-		};
-	}
-};
-
-},{}]},{},[3])(3)
-});
+/***/ })
+/******/ ]);

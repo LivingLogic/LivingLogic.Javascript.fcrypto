@@ -16,7 +16,9 @@
 
 'use strict';
 
-window.openpgp = require('openpgp');
+import * as openpgp from 'openpgp';
+window.openpgp = openpgp;
+// window.openpgp = require('openpgp');
 
 
 ///////////////////////////////////////////////////////////////////////////////////
