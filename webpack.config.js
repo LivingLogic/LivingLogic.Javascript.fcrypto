@@ -50,6 +50,10 @@ module.exports = {
 	output: {
 		filename: '[name].js'
 	},
+	performance: {
+		maxAssetSize: 1800000,
+		maxEntrypointSize: 1800000
+	},
 	plugins: [
 		new BundleAnalyzerPlugin({
 			analyzerMode: 'static',

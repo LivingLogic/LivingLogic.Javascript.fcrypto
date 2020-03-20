@@ -18,7 +18,7 @@
     "build-prod": "webpack --mode=production"
   },
   "dependencies": {
-    "openpgp": "^3.1.2"
+    "openpgp": "^4.10.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",
