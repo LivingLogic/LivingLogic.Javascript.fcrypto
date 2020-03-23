@@ -44004,10 +44004,10 @@ window.openpgp = openpgp;
 						defaults.onError(error);
 					}
 				});
-				decrypt(unlocked);
+				await decrypt(unlocked);
 			}else{
 				const keys = await openpgp["key"].readArmored(prk);
-				decrypt(keys[0]);
+				await decrypt(keys[0]);
 			}
 		}
 	};
