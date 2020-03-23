@@ -43953,7 +43953,7 @@ window.openpgp = openpgp;
 		},
 		"encrypt": async function(elm, str, puk, callback) {
 			var opts = {
-				"data": str,
+				"message": openpgp["message"].fromText(str),
 				"publicKeys": await openpgp["key"].readArmored(puk)
 			};
 			const ciphertext = await openpgp["encrypt"](opts)
