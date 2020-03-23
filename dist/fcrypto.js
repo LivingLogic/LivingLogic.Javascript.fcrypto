@@ -43961,21 +43961,22 @@ window.openpgp = openpgp;
 			callback();
 		},
 		"unlockKey": async function(key, passphrase) {
-			const keys = await openpgp["key"].readArmored(key);
+			const keys = (await openpgp["key"].readArmored(key)).keys;
 			return await openpgp["decryptKey"]({
 				"privateKey": keys[0],
 				"passphrase": passphrase
 			});
 		},
 		"decrypt": async function(elm, str, puk, prk, passphrase, callback) {
+			const message = await openpgp["message"].readArmored(str);
+			const puks = (await openpgp["key"].readArmored(puk)).keys;
 			var self = this, defaults = $.fn.fcrypto.defaults, promise,
-			decrypt = async function(unlocked) {
-				var keyIds, puks, opts = {
-					"message": await openpgp["message"].readArmored(str),
+			decrypt = function(unlocked) {
+				var keyIds, opts = {
+					"message": message,
 					"privateKeys": unlocked.key || unlocked
 				};
 				keyIds = opts.message.getEncryptionKeyIds();
-				puks = await openpgp["key"].readArmored(puk).keys;
 				self.verifyMessagePublicKeys(keyIds, puks).then(function(status){
 					promise = openpgp["decrypt"](opts);
 					promise.then(function (plaintext) {
@@ -44004,10 +44005,10 @@ window.openpgp = openpgp;
 						defaults.onError(error);
 					}
 				});
-				await decrypt(unlocked);
+				decrypt(unlocked);
 			}else{
-				const keys = await openpgp["key"].readArmored(prk);
-				await decrypt(keys[0]);
+				const keys = (await openpgp["key"].readArmored(prk)).keys;
+				decrypt(keys[0]);
 			}
 		}
 	};
