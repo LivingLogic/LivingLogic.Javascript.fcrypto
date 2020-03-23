@@ -155,7 +155,7 @@ window.openpgp = openpgp;
 		"encrypt": async function(elm, str, puk, callback) {
 			var opts = {
 				"message": openpgp.message.fromText(str),
-				"publicKeys": await openpgp.key.readArmored(puk)
+				"publicKeys": (await openpgp.key.readArmored(puk)).keys
 			};
 			const ciphertext = await openpgp.encrypt(opts)
 			$.fn.fcrypto.cryptingHandler.setElementString(elm, ciphertext.data);
