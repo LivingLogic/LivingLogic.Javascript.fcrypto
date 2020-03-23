@@ -52,7 +52,7 @@ window.openpgp = openpgp;
 			if (ch.readyToCrypt(elm)){
 				str = ch.getElementString(elm);
 				if (defaults.mode === 'encrypt'){
-					await ch.encrypt(elm, str, defaults.publicKey, defaults.privateKey, function(status){
+					await ch.encrypt(elm, str, defaults.publicKey, function(status){
 						ch.cryptingLength++;
 						if (typeof(defaults.onEach) === 'function'){
 							defaults.onEach(elm, status);
