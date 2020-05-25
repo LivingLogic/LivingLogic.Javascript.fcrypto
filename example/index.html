@@ -1,26 +1,27 @@
 <!doctype html>
 
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
+  <meta charset="utf-8">
 
-<title>CryptoLivingApp</title>
-<meta name="description" content="The HTML5 Herald">
-<meta name="author" content="SitePoint">
+  <title>CryptoLivingApp</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
 
-<link rel="stylesheet" href="css/styles.css?v=1.0">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<!--[if lt IE 9]>
+  <!--[if lt IE 9]>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
 <![endif]-->
 </head>
 
 <body>
-<script src="../dist/fcrypto.js"></script>
-<h1>Crypto LivingApp</h1>
+  <script src="../dist/fcrypto.min.js"></script>
+  <h1>Crypto LivingApp</h1>
 
-<div id="pubkey" style="display: none;">
+  <div id="pubkey" style="display: none;">
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2
 
@@ -41,8 +42,8 @@ kPL1YG4cdMiAcXt+D+iMcaMJd7x2p4B5ypj+M85ornQgHirYowmGCVb++FTdn8pg
 0S1a1g21B+adqgE=
 =qRGF
 -----END PGP PUBLIC KEY BLOCK-----
-</div>
-<div id="privkey" style="display: none;">
+  </div>
+  <div id="privkey" style="display: none;">
 -----BEGIN PGP PRIVATE KEY BLOCK-----
 Version: GnuPG v2
 
@@ -78,144 +79,146 @@ HLrCHTcaqESd4aSCBfVGzu8tAxmQ8vVgbhx0yIBxe34P6Ixxowl3vHangHnKmP4z
 zmiudCAeKtijCYYJVv74VN2fymDRLVrWDbUH5p2qAQ==
 =V3o4
 -----END PGP PRIVATE KEY BLOCK-----
-</div>
-<br/><br/><br/>
+  </div>
+  <br /><br /><br />
 
-<!-- <button class="js-pgp-lock-private-key">Lock Private Key</button> -->
-<button class="js-initialize-bob">Initialize Bob</button> <br/><br/>
+  <!-- <button class="js-pgp-lock-private-key">Lock Private Key</button> -->
+  <button class="js-initialize-bob">Initialize Bob</button> <br /><br />
 
-<div class="js-pgp-generate-key-container">
-  <input class="js-pgp-user-name" placeholder="John Appleseed" value="John Appleseed" type="text" />
-  <input class="js-pgp-email" placeholder="E-Mail" value="john@example.org" type="text" />
-  <input class="js-pgp-password" placeholder="Password" value="ll123" type="password" />
-  <button class="js-pgp-generate-key" type="button">Generate Private Key</button>
-</div>
+  <div class="js-pgp-generate-key-container">
+    <input class="js-pgp-user-name" placeholder="John Appleseed" value="John Appleseed"
+      type="text" />
+    <input class="js-pgp-email" placeholder="E-Mail" value="john@example.org" type="text" />
+    <input class="js-pgp-password" placeholder="Password" value="ll123" type="password" />
+    <button class="js-pgp-generate-key" type="button">Generate Private Key</button>
+  </div>
 
-<div class="js-pgp-encrypt-content-container" style="display: none;">
-Plaintext <br/>
-  <textarea class="js-pgp-plaintext-input"></textarea>
-  <select class="js-pgp-recipient">
-    <option selected>Alice</option>
-    <option>Bob</option>
-  </select>
-  <button class="js-pgp-encrypt-content">Encrypt</button>
-  <textarea class="js-pgp-ciphertext"></textarea>
-  <hr/>
-</div>
+  <div class="js-pgp-encrypt-content-container" style="display: none;">
+    Plaintext <br />
+    <textarea class="js-pgp-plaintext-input"></textarea>
+    <select class="js-pgp-recipient">
+      <option selected>Alice</option>
+      <option>Bob</option>
+    </select>
+    <button class="js-pgp-encrypt-content">Encrypt</button>
+    <textarea class="js-pgp-ciphertext"></textarea>
+    <hr />
+  </div>
 
-<div class="js-pgp-decrypt-content-container" style="display: none;">
-  <textarea class="js-pgp-ciphertext-input"></textarea>
-  <p class="js-pgp-plaintext"></p>
-  <button class="js-pgp-decrypt-content">Decrypt</button>
-  <hr/>
-</div>
+  <div class="js-pgp-decrypt-content-container" style="display: none;">
+    <textarea class="js-pgp-ciphertext-input"></textarea>
+    <p class="js-pgp-plaintext"></p>
+    <button class="js-pgp-decrypt-content">Decrypt</button>
+    <hr />
+  </div>
 
-<script type="text/javascript">
+  <script type="text/javascript">
 
-var Alice, Bob;
+    var Alice, Bob;
 
-var User = function() {
-  var self = this;
-  this.key = {};
-  this.userName = "John Appleseed";
-  this.keylength = 2048;
-  this.email = "john@example.org";
+    var User = function () {
+      var self = this;
+      this.key = {};
+      this.userName = "John Appleseed";
+      this.keylength = 2048;
+      this.email = "john@example.org";
 
-  this.generateKey = function(callback) {
-    var opt = {
-      userIds: [{ name: this.userName, email: this.email }],
-      numBits: this.keylength
+      this.generateKey = function (callback) {
+        var opt = {
+          userIds: [{ name: this.userName, email: this.email }],
+          numBits: this.keylength
+        };
+
+        console.time('Generating Key');
+        openpgp.generateKey(opt).then(function (newKey) {
+          self.key = newKey;
+          callback(newKey);
+        });
+
+      };
+
+      this.loadKey = async function (privateKey) {
+        var passphrase;
+        this.key = await openpgp.key.readArmored(privateKey);
+        passphrase = prompt("Enter your passphrase");
+        this.key.keys[0].decrypt(passphrase);
+      };
+
+      this.encrypt = async function (message, publicKey) {
+        publicKey = publicKey || this.key.publicKeyArmored;
+        var keysReadArmored = await openpgp.key.readArmored(publicKey);
+        return openpgp.encrypt({
+          message: openpgp.message.fromText(message),
+          publicKeys: keysReadArmored.keys[0]
+        });
+      };
+
+      this.decrypt = async function (ciphertext) {
+        var msgAsciiArmored = ciphertext, message = await openpgp.message.readArmored(msgAsciiArmored);
+        console.log(this.key);
+        return openpgp.decrypt({
+          message: message,
+          privateKey: this.key.key.primaryKey
+        });
+      };
+
+      this.lockKey = function () { console.log('Not Implemented') };
+
     };
 
-    console.time('Generating Key');
-    openpgp.generateKey(opt).then(function(newKey) {
-      self.key = newKey;
-      callback(newKey);
+    document.querySelector('.js-pgp-generate-key').addEventListener('click', function () {
+      Alice = new User();
+      Alice.email = document.querySelector('.js-pgp-email').value;
+      Alice.userName = document.querySelector('.js-pgp-user-name').value;
+      Alice.password = document.querySelector('.js-pgp-password').value;
+
+      Alice.generateKey(function (key) {
+        console.timeEnd('Generating Key');
+        console.log('Key was successfully generated');
+        document.querySelector('.js-pgp-generate-key-container').style.display = 'none';
+        document.querySelector('.js-pgp-encrypt-content-container').style.display = 'block';
+        document.querySelector('.js-pgp-decrypt-content-container').style.display = 'block';
+      });
+
     });
 
-  };
+    document.querySelector('.js-pgp-encrypt-content').addEventListener('click', function () {
+      var plaintext = document.querySelector('.js-pgp-plaintext-input').value;
+      var recipient = document.querySelector('.js-pgp-recipient option:checked').value;
 
-  this.loadKey = function(privateKey) {
-    var passphrase;
-
-    this.key = openpgp.key.readArmored(privateKey);
-    passphrase = prompt("Enter your passphrase");
-    this.key.keys[0].decrypt(passphrase);
-  };
-
-  this.encrypt = function(message, publicKey) {
-    publicKey = publicKey || this.key.publicKeyArmored;
-    return openpgp.encrypt({
-      data: message,
-      publicKeys: openpgp.key.readArmored(publicKey).keys[0]
+      Alice.encrypt(plaintext).then(function (encrypted) {
+        document.querySelector('.js-pgp-ciphertext').value = encrypted.data;
+      });
     });
-  };
 
-  this.decrypt = function(ciphertext) {
-    var msgAsciiArmored = ciphertext;
-    console.log(this.key);
-    return openpgp.decrypt({
-      message: openpgp.message.readArmored(msgAsciiArmored),
-      privateKey: this.key.key
+    document.querySelector('.js-pgp-decrypt-content').addEventListener('click', function () {
+      var ciphertext = document.querySelector('.js-pgp-ciphertext-input').value;
+
+      Alice.decrypt(ciphertext).then(function (decrypted) {
+        console.log(decrypted);
+        document.querySelector('.js-pgp-plaintext').innerText = decrypted.data;
+      });
     });
-  };
 
-  this.lockKey = function() {console.log('Not Implemented')};
-
-};
-
-document.querySelector('.js-pgp-generate-key').addEventListener('click', function() {
-  Alice = new User();
-  Alice.email = document.querySelector('.js-pgp-email').value;
-  Alice.userName = document.querySelector('.js-pgp-user-name').value;
-  Alice.password = document.querySelector('.js-pgp-password').value;
-
-  Alice.generateKey(function(key) {
-    console.timeEnd('Generating Key');
-    console.log('Key was successfully generated');
-    document.querySelector('.js-pgp-generate-key-container').style.display = 'none';
-    document.querySelector('.js-pgp-encrypt-content-container').style.display = 'block';
-    document.querySelector('.js-pgp-decrypt-content-container').style.display = 'block';
-  });
-
-});
-
-document.querySelector('.js-pgp-encrypt-content').addEventListener('click', function() {
-  var plaintext = document.querySelector('.js-pgp-plaintext-input').value;
-  var recipient = document.querySelector('.js-pgp-recipient option:checked').value;
-
-  Alice.encrypt(plaintext).then(function(encrypted) {
-    document.querySelector('.js-pgp-ciphertext').value = encrypted.data;
-  });
-});
-
-document.querySelector('.js-pgp-decrypt-content').addEventListener('click', function() {
-  var ciphertext = document.querySelector('.js-pgp-ciphertext-input').value;
-
-  Alice.decrypt(ciphertext).then(function(decrypted) {
-    console.log(decrypted);
-    document.querySelector('.js-pgp-plaintext').innerText = decrypted.data;
-  });
-});
-
-// document.querySelector('.js-pgp-decrypt-content-placeholder').addEventListener('click', function() {
-//   Alice.lockKey();
-// });
+    // document.querySelector('.js-pgp-decrypt-content-placeholder').addEventListener('click', function() {
+    //   Alice.lockKey();
+    // });
 
 
-var initializeBob = function() {
-  var privateKeyArmored = document.querySelector('#privkey').innerHTML;
+    var initializeBob = function () {
+      var privateKeyArmored = document.querySelector('#privkey').innerHTML;
 
-  Bob = new User();
-  Bob.loadKey(privateKeyArmored);
+      Bob = new User();
+      Bob.loadKey(privateKeyArmored);
 
 
-};
+    };
 
-document.querySelector('.js-initialize-bob').addEventListener('click', function() {
-  initializeBob();
-});
+    document.querySelector('.js-initialize-bob').addEventListener('click', function () {
+      initializeBob();
+    });
 
-</script>
+  </script>
 </body>
+
 </html>
